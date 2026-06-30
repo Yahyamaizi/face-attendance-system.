@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Uncomment if you don't want to commit biometric/personal data to GitHub:
+# embeddings.pkl
+# attendance_logs/
+# known_faces/

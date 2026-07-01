@@ -185,16 +185,12 @@ with tab_enroll:
         else:
             img = Image.open(enroll_photo).convert("RGB")
             face_tensor = mtcnn(img)
-            if face_tensor is None:
+            if face_tensor is None or len(face_tensor) == 0:
                 st.error("No face detected in this photo — try again.")
             else:
+                first_face = face_tensor[0]
                 with torch.no_grad():
-                    embedding = resnet(face_tensor.unsqueeze(0).to(DEVICE)).cpu().numpy()
-                db = load_embeddings()
-                db = add_embedding(db, name_input.strip(), embedding)
-                save_embeddings(db)
-                st.session_state.enroll_count += 1
-                st.success(f"Sample {st.session_state.enroll_count} saved for '{name_input}'.")
+                    embedding = resnet(first_face.unsqueeze(0).to(DEVICE)).cpu().numpy()
 
     st.divider()
     db = load_embeddings()

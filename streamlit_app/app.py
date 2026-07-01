@@ -95,7 +95,7 @@ def detect_and_recognize(img):
     draw = ImageDraw.Draw(draw_img)
 
     for box, face_tensor in zip(boxes, faces):
-        if face_tensor is None:
+        if face_tensor is None or len(face_tensor) == 0:
             continue
         with torch.no_grad():
             embedding = resnet(face_tensor.unsqueeze(0).to(DEVICE)).cpu().numpy()

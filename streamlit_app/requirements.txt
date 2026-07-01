@@ -1,7 +1,6 @@
 streamlit==1.37.0
 numpy==1.26.4
 Pillow==10.2.0
-facenet-pytorch==2.5.2
-torch==1.13.1+cpu
-torchvision==0.14.1+cpu
--f https://download.pytorch.org/whl/torch_stable.html
+facenet-pytorch==2.5.3
+torch==2.2.2
+torchvision==0.17.2

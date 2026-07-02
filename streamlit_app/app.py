@@ -95,7 +95,7 @@ def detect_and_recognize(img):
     draw = ImageDraw.Draw(draw_img)
 
     for box, face_tensor in zip(boxes, faces):
-        if face_tensor is None or len(face_tensor) == 0:
+        if face_tensor is None:
             continue
         with torch.no_grad():
             embedding = resnet(face_tensor.unsqueeze(0).to(DEVICE)).cpu().numpy()
@@ -179,6 +179,8 @@ with tab_enroll:
     with col2:
         st.metric("Samples added this session", st.session_state.enroll_count)
 
+    st.write(f"🔧 DEBUG — name: '{name_input}' | photo taken: {enroll_photo is not None} | button clicked: {add_clicked}")
+
     if add_clicked:
         if enroll_photo is None:
             st.warning("Take a photo first.")
@@ -188,9 +190,17 @@ with tab_enroll:
             if face_tensor is None or len(face_tensor) == 0:
                 st.error("No face detected in this photo — try again.")
             else:
+                # mtcnn is configured with keep_all=True, so it already returns
+                # a batched tensor of shape (num_faces, 3, 160, 160).
+                # Take the first detected face for enrollment.
                 first_face = face_tensor[0]
                 with torch.no_grad():
                     embedding = resnet(first_face.unsqueeze(0).to(DEVICE)).cpu().numpy()
+                db = load_embeddings()
+                db = add_embedding(db, name_input.strip(), embedding)
+                save_embeddings(db)
+                st.session_state.enroll_count += 1
+                st.success(f"Sample {st.session_state.enroll_count} saved for '{name_input}'.")
 
     st.divider()
     db = load_embeddings()

@@ -143,7 +143,7 @@ with tab_attendance:
             if not results:
                 st.warning("No face detected. Try again with better lighting/positioning.")
             else:
-                st.image(draw_img, caption=f"{len(results)} face(s) detected", use_container_width=True)
+                st.image(draw_img, caption=f"{len(results)} face(s) detected")
 
                 newly_logged, already_present, unknown_count = [], [], 0
                 for r in results:
@@ -178,8 +178,6 @@ with tab_enroll:
         )
     with col2:
         st.metric("Samples added this session", st.session_state.enroll_count)
-
-    st.write(f"🔧 DEBUG — name: '{name_input}' | photo taken: {enroll_photo is not None} | button clicked: {add_clicked}")
 
     if add_clicked:
         if enroll_photo is None:
